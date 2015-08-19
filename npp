@@ -1,0 +1,17 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="9">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="512" startPos="895" endPos="895" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\config.lua" backupFilePath="" originalFileLastModifTimestamp="1437745858" />
+            <File firstVisibleLine="219" xOffset="0" scrollWidth="2034" startPos="7622" endPos="7622" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\control.lua" backupFilePath="" originalFileLastModifTimestamp="1437895362" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="664" startPos="0" endPos="0" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\entity.lua" backupFilePath="" originalFileLastModifTimestamp="1437752482" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="592" startPos="0" endPos="0" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\item.lua" backupFilePath="" originalFileLastModifTimestamp="1437817949" />
+            <File firstVisibleLine="119" xOffset="0" scrollWidth="539" startPos="3973" endPos="3973" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\item-tiers.lua" backupFilePath="" originalFileLastModifTimestamp="1437844625" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="552" startPos="0" endPos="0" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\recipe.lua" backupFilePath="" originalFileLastModifTimestamp="1437819599" />
+            <File firstVisibleLine="27" xOffset="0" scrollWidth="584" startPos="1021" endPos="1021" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\technology.lua" backupFilePath="" originalFileLastModifTimestamp="1437844642" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="640" startPos="18001" endPos="18001" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\teleporter-tiers.lua" backupFilePath="" originalFileLastModifTimestamp="1437894605" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="624" startPos="436" endPos="463" selMode="0" lang="Lua" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\prototypes\upgrade-entity.lua" backupFilePath="" originalFileLastModifTimestamp="1437830559" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1480" startPos="1815" endPos="1815" selMode="0" lang="Normaler Text" encoding="-1" filename="C:\Users\Johnny\AppData\Roaming\Factorio\mods\SimpleTeleporters_0.0.2\locale\en\locale.cfg" backupFilePath="" originalFileLastModifTimestamp="1437893851" />
+        </mainView>
+        <subView activeIndex="0" />
+    </Session>
+</NotepadPlus>
