@@ -79,7 +79,7 @@ data.raw["gui-style"].default["teleporter-progress-bar"] = {
 data.raw["gui-style"].default["teleporter-dropdown"] = {
 	type = "frame_style",
 	parent = "frame_style",
-	font = "default-bold",
+	font = "teleporter-font",
 	title_top_padding = 0,
 	title_left_padding = 0,
 	title_bottom_padding = 0,
@@ -118,6 +118,36 @@ data.raw["gui-style"].default["teleporter-link-frame"] = {
 		horizontal_spacing = 0,
 		vertical_spacing = 0
 	}
+}
+
+data.raw["gui-style"].default["teleporter-dropdown-selected"] = {
+    type = "frame_style",
+	parent = "teleporter-dropdown",
+    graphical_set =
+    {
+      type = "composition",
+      filename = "__core__/graphics/arrows/hint-orange-box.png",
+      priority = "extra-high-no-scale",
+      corner_size = {13, 13},
+      position = {0, 0}
+    },
+	title_top_padding = 0,
+	title_left_padding = 0,
+	title_bottom_padding = 0,
+	title_right_padding = 0,
+	top_padding  = 0,
+	right_padding = 0,
+	bottom_padding = 0,
+	left_padding = 0,
+}
+
+data.raw["gui-style"].default["teleporter-flow"] = {
+    type = "flow_style",
+    horizontal_spacing = 2,
+    vertical_spacing = 2,
+    max_on_row = 0,
+    resize_row_to_width = false,
+    resize_to_row_height = false
 }
 
 data:extend(

@@ -4,6 +4,12 @@ guistate = false
 selected_teleporter = nil
 mode = "links"
 tier_details = 0
+dropdownStates = {}
+dropdowns = {}
+aDropdownNameFields = {}
+bDropdownNameFields = {}
+value_font_color = {r=1, g=1}
+value_font_color_links = {r=1, g=1}
 
 function gui_tick(player)
 	if guistate == true then
@@ -84,6 +90,90 @@ function updateProgressBar(player, bar)
 	end
 end
 
+function isDropDown(element)
+	if string.sub(element.name, 1,9) == "DropDown_" then
+		return true
+	else
+		return false
+	end
+end
+
+function populateDropDowns(pr)
+	--p.gui.center.TeleWindow.DetailsFrame.DropDown_1.
+	for k,v in ipairs(global.links) do
+		dropdowns[k] = pr.add{type="frame", name="DropDown_"..tostring(k), caption="Link #"..tostring(k), style="teleporter-dropdown"}
+	end
+	for k,v in ipairs(dropdownStates) do
+		if v == true then
+			expandDropDown(dropdowns[k])
+		end
+	end
+end
+
+function getDropDownID(dropdown)
+	local str = string.sub(dropdown.name,10,11) --DropDown_XX
+	return tonumber(str)
+end
+
+function isDropDownExpanded(dropdown)
+	if dropdown.DropDownFlow == nil then
+		return false
+	else
+		return true
+	end
+end
+
+function expandDropDown(dropdown)
+	if isDropDown(dropdown) == false then return end
+	
+	dropdown.style = "teleporter-dropdown-selected"
+	
+	dropdownStates[getDropDownID(dropdown)] = true
+	
+	local a = global.links[getDropDownID(dropdown)].a
+	local b = global.links[getDropDownID(dropdown)].b
+	
+	dropdown.add{type="flow", name="DropDownFlow", direction="vertical"}
+	
+	dropdown.DropDownFlow.add{type="flow", name="NonSideDetails", direction="vertical", style="teleporter-flow"}
+	dropdown.DropDownFlow.NonSideDetails.add{type="flow", name="TierInfo", direction="horizontal"}
+	dropdown.DropDownFlow.NonSideDetails.TierInfo.add{type="label", name="TierLabel1", caption="Tier:"}
+	dropdown.DropDownFlow.NonSideDetails.TierInfo.add{type="label", name="TierLabel2", caption=getTier(a)}.style.font_color = value_font_color_links
+	
+	dropdown.DropDownFlow.NonSideDetails.add{type="flow", name="DistanceInfo", direction="horizontal"}
+	dropdown.DropDownFlow.NonSideDetails.DistanceInfo.add{type="label", name="DistanceLabel1", caption="Distance:"}
+	dropdown.DropDownFlow.NonSideDetails.DistanceInfo.add{type="label", name="DistanceLabel2", caption=round(getDistance(a,b),2).." Tiles"}.style.font_color = value_font_color_links
+	
+	dropdown.DropDownFlow.add{type="flow", name="SideDetails", direction="horizontal"}
+	
+	dropdown.DropDownFlow.SideDetails.add{type="frame", name="SideAInfo", caption="Teleporter 1", direction="vertical"}
+	dropdown.DropDownFlow.SideDetails.SideAInfo.add{type="flow", name="aNameInfo", direction="horizontal"}
+	dropdown.DropDownFlow.SideDetails.SideAInfo.aNameInfo.add{type="label", name="aName1", caption="Name:"}
+	aDropdownNameFields[getDropDownID(dropdown)] = dropdown.DropDownFlow.SideDetails.SideAInfo.aNameInfo.add{type="textfield", name="aName2", style="teleporter-name-textfield"}
+	aDropdownNameFields[getDropDownID(dropdown)].text = getName(a)
+	dropdown.DropDownFlow.SideDetails.SideAInfo.aNameInfo.add{type="button", name="aSetNameButton_"..tostring(getDropDownID(dropdown)), caption="Set", style="teleporter-button-small"}
+	dropdown.DropDownFlow.SideDetails.SideAInfo.add{type="flow", name="aCoordsInfo", direction="horizontal"}
+	dropdown.DropDownFlow.SideDetails.SideAInfo.aCoordsInfo.add{type="label", name="aCoords1", caption="Coordinates:"}
+	dropdown.DropDownFlow.SideDetails.SideAInfo.aCoordsInfo.add{type="label", name="aCoords2", caption=a.position.x..";"..a.position.y}.style.font_color = value_font_color
+	
+	dropdown.DropDownFlow.SideDetails.add{type="frame", name="SideBInfo", caption="Teleporter 2", direction="vertical"}	
+	dropdown.DropDownFlow.SideDetails.SideBInfo.add{type="flow", name="bNameInfo", direction="horizontal"}
+	dropdown.DropDownFlow.SideDetails.SideBInfo.bNameInfo.add{type="label", name="bName1", caption="Name:"}
+	bDropdownNameFields[getDropDownID(dropdown)] = dropdown.DropDownFlow.SideDetails.SideBInfo.bNameInfo.add{type="textfield", name="bName2", style="teleporter-name-textfield"}
+	bDropdownNameFields[getDropDownID(dropdown)].text = getName(b)
+	dropdown.DropDownFlow.SideDetails.SideBInfo.bNameInfo.add{type="button", name="bSetNameButton_"..tostring(getDropDownID(dropdown)), caption="Set", style="teleporter-button-small"}
+	dropdown.DropDownFlow.SideDetails.SideBInfo.add{type="flow", name="bCoordsInfo", direction="horizontal"}
+	dropdown.DropDownFlow.SideDetails.SideBInfo.bCoordsInfo.add{type="label", name="bCoords1", caption="Coordinates:"}
+	dropdown.DropDownFlow.SideDetails.SideBInfo.bCoordsInfo.add{type="label", name="bCoords2", caption=b.position.x..";"..b.position.y}.style.font_color = value_font_color
+end
+
+function closeDropDown(dropdown, player)
+	if dropdown.DropDownFlow == nil then return end
+	dropdown.DropDownFlow.destroy()
+	dropdownStates[getDropDownID(dropdown)] = false
+	redrawWindow(player)
+end
+
 function drawWindow(p)
 	if p.gui.center.TeleWindow == nil then return end
 	
@@ -102,41 +192,8 @@ function drawWindow(p)
 	
 	local tierInfoFields = {}
 	
-	local linkItems = {}
-
-	
 	if mode == "links" then
-		linkItems = {}
-		for k,v in ipairs(global.links) do
-			-- MasterFrame (frame)
-			-- ╚ NonSideDetails (flow)
-			--   ╚ LinkInfo (flow)
-			--     ╚ LinkLabel1 (label)
-			--     ╚ LinkLabel2 (label)
-			--   ╚ TierInfo (flow)
-			--     ╚ TierLabel1 (label)
-			--	   ╚ TierLabel2 (label)
-			--   ╚ DistanceInfo (flow)
-			--     ╚ DistanceLabel1 (label)
-			--     ╚ DistanceLabel2 (label)
-			-- ╚ TeleportersInfo (flow)
-			--   ╚ SideAInfo (frame)
-			--     ╚ aNameInfo (flow)
-			--       ╚ aName1 (label)
-			--       ╚ aName2 (textfield)
-			--       ╚ aSetNameBtn (button)
-			--     ╚ aCoordsInfo (flow)
-			--       ╚ aCoords1 (label)
-			--       ╚ aCords2 (label)
-			--   ╚ SideBInfo (frame)
-			--     ╚ bNameInfo (flow)
-			--       ╚ bName1 (label)
-			--       ╚ bName2 (textfield)
-			--       ╚ bSetNameBtn (button)
-			--     ╚ bCoordsInfo (flow)
-			--       ╚ bCoords1 (label)
-			--       ╚ bCoords2 (label)
-		end
+		populateDropDowns(h.DetailsFrame)
 	elseif mode == "wiki" then
 		h.DetailsFrame.add{type="label", caption="Select a tier below to see its informations."}
 		h.DetailsFrame.add{type="table", name="TierTable", colspan = 5}
@@ -145,12 +202,12 @@ function drawWindow(p)
 		end
 		if tier_details ~= 0 then
 			h.DetailsFrame.add{type="frame", name="TierInfo", direction="vertical"}
-			h.DetailsFrame.TierInfo.add{type="label", caption="Showing informations for Tier "..tostring(tier_details)}.style.font_color = {r=1,g=1}
+			h.DetailsFrame.TierInfo.add{type="label", caption="Showing informations for Tier "..tostring(tier_details)}.style.font_color = value_font_color
 			tierInfoFields = {}
 			for i=1,4,1 do
 				tierInfoFields[i] = h.DetailsFrame.TierInfo.add{type="flow", name="TierInfoField"..tostring(i), direction="horizontal"}
 				tierInfoFields[i].add{type="label", caption=index2configName(i), style="teleporter-label-1"}
-				tierInfoFields[i].add{type="label", caption=getConfigValue(index2configValue(i), tier_details).." "..index2configUnit(i)}.style.font_color = {r=1, g=1}
+				tierInfoFields[i].add{type="label", caption=getConfigValue(index2configValue(i), tier_details).." "..index2configUnit(i)}.style.font_color = value_font_color
 			end
 		end
 	elseif mode == "current" then
@@ -162,9 +219,9 @@ function drawWindow(p)
 		h.DetailsFrame.CurrentName.add{type="textfield", name="CurrentTeleporterName"}.text=getName(selected_teleporter)
 		h.DetailsFrame.CurrentName.add{type="button", name="CurrentNameSet_btn", caption="Set", style="teleporter-button-small"}
 		h.DetailsFrame.CurrentInfo1.add{type="label", caption="Teleporter Tier: ", style="teleporter-label-1"}
-		h.DetailsFrame.CurrentInfo1.add{type="label", caption=tostring(getTier(selected_teleporter))}.style.font_color = {r=1, g=1}
+		h.DetailsFrame.CurrentInfo1.add{type="label", caption=tostring(getTier(selected_teleporter))}.style.font_color = value_font_color
 		h.DetailsFrame.CurrentInfo2.add{type="label", caption="Current Status: ", style="teleporter-label-1"}
-		h.DetailsFrame.CurrentInfo2.add{type="label", caption=getState(selected_teleporter)}.style.font_color = {r=1,g=1}
+		h.DetailsFrame.CurrentInfo2.add{type="label", caption=getState(selected_teleporter)}.style.font_color = value_font_color
 	end
 end
 
@@ -192,19 +249,22 @@ game.on_event(defines.events.on_gui_click,
 					assignName(selected_teleporter, p.gui.center.TeleWindow.DetailsFrame.CurrentName.CurrentTeleporterName.text, p)
 				end
 			end
-		elseif string.sub(event.element.name, 2,12) == "SetNameBtn_" then
-			local field = string.sub(event.element.name, 1, 1)
-			local index = string.sub(event.element.name, 13, 14)
-			local value_a = a_fields[index]
-			local value_b = b_fields[index]
-			p.print("Index = "..index.." field = "..field)
-			if field == "a" then
-				p.print("Field a! Val="..value_a)
-			elseif field == "b" then
-				p.print("Field b! Val="..value_b)
+		elseif isDropDown(event.element) then
+			if isDropDownExpanded(event.element) then
+				closeDropDown(event.element, p)
 			else
-				p.print("Something")
+				expandDropDown(event.element)
 			end
+		elseif string.sub(event.element.name, 1, 15) == "aSetNameButton_" then
+			local index = tonumber(string.sub(event.element.name, 16, 17))
+			local t_a = global.links[index].a
+			local textfield = aDropdownNameFields[index]
+			assignName(t_a, textfield.text, p)
+		elseif string.sub(event.element.name, 1, 15) == "bSetNameButton_" then
+			local index = tonumber(string.sub(event.element.name, 16, 17))
+			local t_b = global.links[index].a
+			local textfield = bDropdownNameFields[index]
+			assignName(t_b, textfield.text, p)
 		end
 	end
 )
