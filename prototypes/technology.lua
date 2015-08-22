@@ -20,6 +20,10 @@ data:extend({
 		{
 		  type = "unlock-recipe",
 		  recipe = "liquid-alien-artifacts"
+		},
+		{
+		  type = "unlock-recipe",
+		  recipe = "gui-tool"
 		}
 	  },
       prerequisites = {"automation-3", "electronics", "circuit-network"},

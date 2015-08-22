@@ -649,6 +649,19 @@ game.on_event(defines.events.on_built_entity,
 			end
 		elseif isValidTeleporter(event.created_entity) then
 			assignName(event.created_entity, "Teleporter #"..tostring(arraylength(global.names)+1), nil)
+		elseif event.created_entity.name == "gui-tool" then
+			player.insert{name="gui-tool", count=1}
+			hitpos = event.created_entity.position
+			hitrange = { {hitpos.x-1, hitpos.y-1},{hitpos.x+1, hitpos.y+1} }
+			hittp = findTeleporters(hitrange, event.player_index)
+			
+			if arraylength(hittp) >= 1 then
+				setGuiState(true, game.players[event.player_index], hittp[1])
+			else
+				setGuiState(true, game.players[event.player_index], nil)
+			end
+			
+			event.created_entity.destroy()
 		end
 	end
 )

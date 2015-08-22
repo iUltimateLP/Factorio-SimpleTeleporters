@@ -210,4 +210,17 @@ data:extend({
 		result = "distance-tool",
 		enabled = "true"	
 	},
+	{
+		type = "recipe",
+		name = "gui-tool",
+		ingredients = 
+		{
+			{"plastic-bar", 6},
+			{"electronic-circuit", 2},
+			{"copper-cable", 5},
+			{"steel-plate", 2}
+		},
+		result = "gui-tool",
+		enabled = "false"
+	}
 })

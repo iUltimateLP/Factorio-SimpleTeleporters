@@ -187,6 +187,7 @@ function drawWindow(p)
 	else
 		h.TabFlow.add{type="button", name="Current_btn", caption="Current", style="teleporter-button"}
 	end
+	h.TabFlow.add{type="button", name="Exit_btn", caption="Close", style="teleporter-button"}
 	
 	h.add{type="frame", name="DetailsFrame", direction="vertical"}
 	
@@ -240,6 +241,8 @@ game.on_event(defines.events.on_gui_click,
 				mode = "current"
 				redrawWindow(p)
 			end
+		elseif event.element.name == "Exit_btn" then
+			setGuiState(false, p, nil)
 		elseif string.sub(event.element.name,1,10) == "TierButton" then
 			tier_details = tonumber(string.sub(event.element.name,11,12))
 			redrawWindow(p)
