@@ -100,13 +100,18 @@ end
 
 function populateDropDowns(pr)
 	--p.gui.center.TeleWindow.DetailsFrame.DropDown_1.
-	for k,v in ipairs(global.links) do
-		dropdowns[k] = pr.add{type="frame", name="DropDown_"..tostring(k), caption="Link #"..tostring(k), style="teleporter-dropdown"}
-	end
-	for k,v in ipairs(dropdownStates) do
-		if v == true then
-			expandDropDown(dropdowns[k])
+	if arraylength(global.links) >= 1 then
+		for k,v in ipairs(global.links) do
+			dropdowns[k] = pr.add{type="frame", name="DropDown_"..tostring(k), caption="Link #"..tostring(k), style="teleporter-dropdown"}
 		end
+		for k,v in ipairs(dropdownStates) do
+			if v == true then
+				expandDropDown(dropdowns[k])
+			end
+		end
+	else
+		pr.add{type="label", caption="No Links were made!"}.style.font_color = {r=1, g=1}
+		pr.add{type="label", caption="Go ahead and make some!"}.style.font_color = {r=1, g=1}
 	end
 end
 

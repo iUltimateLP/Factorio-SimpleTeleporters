@@ -11,7 +11,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier01"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -79,7 +80,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier02"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -147,7 +149,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier03"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -215,7 +218,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier04"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -283,7 +287,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier05"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -351,7 +356,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier06"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -419,7 +425,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier07"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -487,7 +494,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier08"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -555,7 +563,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier09"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
@@ -623,7 +632,8 @@ data:extend({
     minable = {hardness = 0.2, mining_time = 0.5, result = "Teleporter_Tier10"},
     max_health = 150,
     corpse = "medium-remnants",
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-2, -2}, {2,2}},
+    collision_mask = {"water-tile", "item-layer", "object-layer"},
     selection_box = {{-2, -2}, {2, 2}},
 	render_layer = decorative,
     energy_source =
