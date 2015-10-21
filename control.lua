@@ -486,8 +486,10 @@ script.on_event(defines.events.on_tick,
 				end --if v.enabled
 			end --for
 			--
-			
+						
+			-- GUI HOOK
 			gui_tick(player)
+			--
 			
 			if arraylength(next_teleporter) >= 1 then
 				allowed_range_x = next_teleporter[1].position.x + 0.4
@@ -649,6 +651,7 @@ script.on_event(defines.events.on_built_entity,
 			end
 		elseif isValidTeleporter(event.created_entity) then
 			assignName(event.created_entity, "Teleporter #"..tostring(arraylength(global.names)+1), nil)
+		-- GUI STUFF
 		elseif event.created_entity.name == "gui-tool" then
 			player.insert{name="gui-tool", count=1}
 			hitpos = event.created_entity.position
@@ -656,13 +659,16 @@ script.on_event(defines.events.on_built_entity,
 			hittp = findTeleporters(hitrange, event.player_index)
 			
 			if arraylength(hittp) >= 1 then
-				setGuiState(true, game.players[event.player_index], hittp[1])
+				--setGuiState(true, game.players[event.player_index], hittp[1])
+				setGuiStatePerPlayer(true, game.players[event.player_index], hittp[1])
 			else
-				setGuiState(true, game.players[event.player_index], nil)
+				--setGuiState(true, game.players[event.player_index], nil)
+				setGuiStatePerPlayer(true, game.players[event.player_index], nil)
 			end
 			
 			event.created_entity.destroy()
 		end
+		--
 	end
 )
 

@@ -1,8 +1,8 @@
 require "defines"
 
-guistate = false
-selected_teleporter = nil
-mode = "links"
+guistate = false -- sync
+selected_teleporter = nil --sync
+mode = "links" 
 tier_details = 0
 dropdownStates = {}
 dropdowns = {}
@@ -11,6 +11,9 @@ bDropdownNameFields = {}
 value_font_color = {r=1, g=1}
 value_font_color_links = {r=1, g=1}
 
+guistate_per_player = {} -- player (p), state (s), teleporter (t), mode (m)
+
+--[[
 function gui_tick(player)
 	if guistate == true then
 		if player.gui.center.TeleWindow == nil then
@@ -37,6 +40,103 @@ function gui_tick(player)
 		end
 	end
 end
+]]--
+
+-- NEW MULTIPLAYER FUNCTIONS
+
+function gui_tick(player)
+	if getGuiStatePerPlayer(player) == true then
+		if player.gui.center.TeleWindow == nil then
+			player.gui.center.add{type="frame", name="TeleWindow", caption="Teleportation Window", direction="horizontal"}
+			drawWindow(player)
+		end
+		if getModePerPlayer(player) == "current" and getTeleporterPerPlayer(player) ~= nil and isTeleInCooldown(getTeleporterPerPlayer(player)) then
+			if player.gui.center.TeleWindow.DetailsFrame.CooldownInfo == nil then
+				player.gui.center.TeleWindow.DetailsFrame.add{type="flow", name="CooldownInfo", direction="horizontal"}
+				player.gui.center.TeleWindow.DetailsFrame.CooldownInfo.add{type="label", caption="Seconds left:"}
+				player.gui.center.TeleWindow.DetailsFrame.CooldownInfo.add{type="progressbar", name="CooldownProgress", size=getConfigValue("cooldown", getTier(getTeleporterPerPlayer(player))), style="teleporter-progress-bar"}
+			end
+			if player.gui.center.TeleWindow.DetailsFrame.CooldownInfo.CooldownProgress ~= nil then
+				updateProgressBar(player, player.gui.center.TeleWindow.DetailsFrame.CooldownInfo.CooldownProgress)
+			end
+		elseif getModePerPlayer(player) == "current" and getTeleporterPerPlayer(player) ~= nil and isTeleInCooldown(getTeleporterPerPlayer(player)) == false then
+			if player.gui.center.TeleWindow.DetailsFrame.CooldownInfo ~= nil then
+				player.gui.center.TeleWindow.DetailsFrame.CooldownInfo.destroy()
+			end
+		end
+	else
+		if player.gui.center.TeleWindow ~= nil then
+			player.gui.center.TeleWindow.destroy()
+		end
+	end
+end
+
+function setGuiStatePerPlayer(state, player, teleporter)
+	if isPlayerInStateList(player) == false then
+		guistate_per_player[arraylength(guistate_per_player)+1] = {p = player, s = state, t = teleporter, m = "links"}
+		player.print("Assigned new ID "..arraylength(guistate_per_player).." to player "..player.name.. "with state "..tostring(state))
+	else
+		guistate_per_player[getPlayerStateID(player)].s = state
+		guistate_per_player[getPlayerStateID(player)].t = teleporter
+		guistate_per_player[getPlayerStateID(player)].m = "links"
+		player.print("Player is already in list with ID "..getPlayerStateID(player).." with state "..tostring(state))
+	end
+end
+
+function getGuiStatePerPlayer(player)
+	if isPlayerInStateList(player) == false then
+		setGuiStatePerPlayer(false, player, nil)
+	else
+		for k,v in ipairs(guistate_per_player) do
+			if v.p == player then
+				return v.s
+			end
+		end
+	end
+	
+end
+
+function getTeleporterPerPlayer(player)
+	for k,v in ipairs(guistate_per_player) do
+		if v.p == player then
+			return v.t
+		end
+	end
+	return nil
+end
+
+function setModePerPlayer(player, mode)
+	guistate_per_player[getPlayerStateID(player)].m = mode
+end
+
+function getModePerPlayer(player)
+	for k,v in ipairs(guistate_per_player) do
+		if v.p == player then
+			return v.m
+		end
+	end
+	return "links"
+end
+
+function isPlayerInStateList(player)
+	for k,v in ipairs(guistate_per_player) do
+		if v.p == player then
+			return true
+		end
+	end
+	return false
+end
+
+function getPlayerStateID(player)
+	for k,v in ipairs(guistate_per_player) do
+		if v.p == player then
+			return k
+		end
+	end
+	return nil
+end
+
+-- END
 
 function setGuiState(state, player, teleporter)
 	guistate = state
@@ -187,7 +287,7 @@ function drawWindow(p)
 	h.add{type="flow", name="TabFlow", direction="vertical"}
 	h.TabFlow.add{type="button", name="Links_btn", caption="Links", style="teleporter-button"}
 	h.TabFlow.add{type="button", name="Wiki_btn", caption="Wiki", style="teleporter-button"}
-	if selected_teleporter == nil then
+	if getTeleporterPerPlayer(p) == nil then
 		h.TabFlow.add{type="button", name="Current_btn", caption="Current", style="teleporter-button-deactive"}
 	else
 		h.TabFlow.add{type="button", name="Current_btn", caption="Current", style="teleporter-button"}
@@ -198,9 +298,9 @@ function drawWindow(p)
 	
 	local tierInfoFields = {}
 	
-	if mode == "links" then
+	if getModePerPlayer(p) == "links" then
 		populateDropDowns(h.DetailsFrame)
-	elseif mode == "wiki" then
+	elseif getModePerPlayer(p) == "wiki" then
 		h.DetailsFrame.add{type="label", caption="Select a tier below to see its informations."}
 		h.DetailsFrame.add{type="table", name="TierTable", colspan = 5}
 		for i=1,10,1 do
@@ -216,18 +316,18 @@ function drawWindow(p)
 				tierInfoFields[i].add{type="label", caption=getConfigValue(index2configValue(i), tier_details).." "..index2configUnit(i)}.style.font_color = value_font_color
 			end
 		end
-	elseif mode == "current" then
+	elseif getModePerPlayer(p) == "current" then
 		h.DetailsFrame.add{type="flow", name="CurrentName", direction="horizontal"}
 		h.DetailsFrame.add{type="flow", name="CurrentInfo1", direction="horizontal"}
 		h.DetailsFrame.add{type="flow", name="CurrentInfo2", direction="horizontal"}
 		
 		h.DetailsFrame.CurrentName.add{type="label", caption="Name: "}
-		h.DetailsFrame.CurrentName.add{type="textfield", name="CurrentTeleporterName"}.text=getName(selected_teleporter)
+		h.DetailsFrame.CurrentName.add{type="textfield", name="CurrentTeleporterName"}.text=getName(getTeleporterPerPlayer(p))
 		h.DetailsFrame.CurrentName.add{type="button", name="CurrentNameSet_btn", caption="Set", style="teleporter-button-small"}
 		h.DetailsFrame.CurrentInfo1.add{type="label", caption="Teleporter Tier: ", style="teleporter-label-1"}
-		h.DetailsFrame.CurrentInfo1.add{type="label", caption=tostring(getTier(selected_teleporter))}.style.font_color = value_font_color
+		h.DetailsFrame.CurrentInfo1.add{type="label", caption=tostring(getTier(getTeleporterPerPlayer(p)))}.style.font_color = value_font_color
 		h.DetailsFrame.CurrentInfo2.add{type="label", caption="Current Status: ", style="teleporter-label-1"}
-		h.DetailsFrame.CurrentInfo2.add{type="label", caption=getState(selected_teleporter)}.style.font_color = value_font_color
+		h.DetailsFrame.CurrentInfo2.add{type="label", caption=getState(getTeleporterPerPlayer(p))}.style.font_color = value_font_color
 	end
 end
 
@@ -236,25 +336,26 @@ script.on_event(defines.events.on_gui_click,
 		local p = game.players[event.player_index]
 		--General Tab Button Switch
 		if event.element.name == "Links_btn" then
-			mode = "links"
+			setModePerPlayer(p, "links")
 			redrawWindow(p)
 		elseif event.element.name == "Wiki_btn" then
-			mode = "wiki"
+			setModePerPlayer(p, "wiki")
 			redrawWindow(p)
 		elseif event.element.name == "Current_btn" then
-			if selected_teleporter ~= nil then
-				mode = "current"
+			if getTeleporterPerPlayer(p) ~= nil then
+				setModePerPlayer(p, "current")
 				redrawWindow(p)
 			end
 		elseif event.element.name == "Exit_btn" then
-			setGuiState(false, p, nil)
+			--setGuiState(false, p, nil)
+			setGuiStatePerPlayer(false, p, nil)
 		elseif string.sub(event.element.name,1,10) == "TierButton" then
 			tier_details = tonumber(string.sub(event.element.name,11,12))
 			redrawWindow(p)
 		elseif event.element.name == "CurrentNameSet_btn" then
 			if p.gui.center.TeleWindow.DetailsFrame.CurrentName.CurrentTeleporterName ~= nil then
 				if p.gui.center.TeleWindow.DetailsFrame.CurrentName.CurrentTeleporterName ~='' then
-					assignName(selected_teleporter, p.gui.center.TeleWindow.DetailsFrame.CurrentName.CurrentTeleporterName.text, p)
+					assignName(getTeleporterPerPlayer(p), p.gui.center.TeleWindow.DetailsFrame.CurrentName.CurrentTeleporterName.text, p)
 				end
 			end
 		elseif isDropDown(event.element) then
