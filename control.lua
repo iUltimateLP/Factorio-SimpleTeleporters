@@ -433,14 +433,14 @@ function getState(teleporter)
 	end
 end
 
-game.on_init(
+script.on_init(
 	function()
 		global.links = global.links or {}
 		global.names = global.names or {}
 	end
 )
 
-game.on_load(
+script.on_load(
 	function()
 		global.links = global.links or {}
 		global.names = global.names or {}
@@ -459,7 +459,7 @@ ax, ay, bx, by, e1, e2 = 0, 0, 0, 0, nil, nil
 
 cd = {}
 
-game.on_event(defines.events.on_tick, 
+script.on_event(defines.events.on_tick, 
 	function(event)
 		for k,v in ipairs(game.players) do
 			local player = game.players[k]
@@ -544,7 +544,7 @@ game.on_event(defines.events.on_tick,
 	end --function
 )
 
-game.on_event(defines.events.on_built_entity, 
+script.on_event(defines.events.on_built_entity, 
 	function(event)
 		local player = game.get_player(event.player_index)
 		
@@ -666,7 +666,7 @@ game.on_event(defines.events.on_built_entity,
 	end
 )
 
-game.on_event(defines.events.on_preplayer_mined_item,
+script.on_event(defines.events.on_preplayer_mined_item,
 	function(event)
 		local player = game.get_player(event.player_index)
 

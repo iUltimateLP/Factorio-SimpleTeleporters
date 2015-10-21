@@ -231,7 +231,7 @@ function drawWindow(p)
 	end
 end
 
-game.on_event(defines.events.on_gui_click, 
+script.on_event(defines.events.on_gui_click, 
 	function(event)
 		local p = game.players[event.player_index]
 		--General Tab Button Switch
